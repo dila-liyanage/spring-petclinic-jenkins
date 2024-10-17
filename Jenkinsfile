@@ -6,15 +6,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                script {
-                    git branch: 'main', 
-                        url: 'https://github.com/dila-liyanage/spring-petclinic-jenkins.git', 
-                        credentialsId: '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'
-                }
-            }
-        }
 
         stage('Build and Test') {
             steps {
