@@ -10,14 +10,14 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh 'mvn clean package'
+                    bat 'mvn clean package'
                 }
             }
         }
         stage('Code Coverage') {
             steps {
                 script {
-                    sh 'mvn jacoco:report'
+                    bat 'mvn jacoco:report'
                 }
             }
         }
