@@ -2,7 +2,7 @@ pipeline {
     agent any 
 
     triggers {
-        cron('H */10 * * 1') // Triggers every 10 minutes on Mondays
+        cron('H */10 * * 1')
     }
 
     stages {
@@ -11,7 +11,7 @@ pipeline {
                 script {
                     git branch: 'main', 
                         url: 'https://github.com/dila-liyanage/spring-petclinic-jenkins.git', 
-                        credentialsId: '<your-credential-id>' // Replace with your credentials ID
+                        credentialsId: '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'
                 }
             }
         }
@@ -19,9 +19,7 @@ pipeline {
         stage('Build and Test') {
             steps {
                 script {
-                    // Ensure you have Maven installed in your Jenkins instance
-                    // Run Maven to build the project and generate the Jacoco report
-                    bat 'mvn clean verify' // Use bat for Windows
+                    bat 'mvn clean verify'
                 }
             }
         }
@@ -29,10 +27,8 @@ pipeline {
         stage('Jacoco Code Coverage') {
             steps {
                 script {
-                    // Run the Jacoco report generation
-                    bat 'mvn jacoco:report' // Use bat for Windows
-
-                    // Publish the Jacoco report in Jenkins
+                    bat 'mvn jacoco:report'
+                    
                     publishHTML(target: [
                         reportDir: 'target/site/jacoco',
                         reportFiles: 'index.html',
@@ -46,7 +42,6 @@ pipeline {
 
     post {
         always {
-            // Clean up workspace after the build
             cleanWs()
         }
     }
