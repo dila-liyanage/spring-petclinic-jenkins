@@ -6,12 +6,22 @@ pipeline {
     }
 
     stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    git branch: 'main', 
+                        url: 'https://github.com/dila-liyanage/spring-petclinic-jenkins.git', 
+                        credentialsId: '<your-credential-id>' // Replace with your credentials ID
+                }
+            }
+        }
+
         stage('Build and Test') {
             steps {
                 script {
                     // Ensure you have Maven installed in your Jenkins instance
                     // Run Maven to build the project and generate the Jacoco report
-                    sh 'mvn clean verify'
+                    bat 'mvn clean verify' // Use bat for Windows
                 }
             }
         }
@@ -19,10 +29,10 @@ pipeline {
         stage('Jacoco Code Coverage') {
             steps {
                 script {
-                    // Assuming the Jacoco report is generated in the target/site/jacoco
-                    // Archive the Jacoco report
-                    sh 'mvn jacoco:report'
-                    // You can add a step to publish the Jacoco report in Jenkins
+                    // Run the Jacoco report generation
+                    bat 'mvn jacoco:report' // Use bat for Windows
+
+                    // Publish the Jacoco report in Jenkins
                     publishHTML(target: [
                         reportDir: 'target/site/jacoco',
                         reportFiles: 'index.html',
