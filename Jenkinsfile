@@ -1,39 +1,30 @@
 pipeline {
     agent any 
-
+    tools {
+        maven 'MAVEN3'
+    }
     triggers {
-        cron('H */10 * * 1')
+        cron('H/10 * * * 1')
     }
-
     stages {
-
-        stage('Build and Test') {
+        stage('Build') {
             steps {
                 script {
-                    bat 'mvn clean verify'
+                    sh 'mvn clean package'
                 }
             }
         }
-
-        stage('Jacoco Code Coverage') {
+        stage('Code Coverage') {
             steps {
                 script {
-                    bat 'mvn jacoco:report'
-                    
-                    publishHTML(target: [
-                        reportDir: 'target/site/jacoco',
-                        reportFiles: 'index.html',
-                        reportName: 'Jacoco Coverage Report',
-                        alwaysLinkToLastBuild: true
-                    ])
+                    sh 'mvn jacoco:report'
                 }
             }
         }
     }
-
     post {
         always {
-            cleanWs()
+            archiveArtifacts artifacts: '**/target/site/jacoco/jacoco.xml', allowEmptyArchive: true
         }
     }
 }
